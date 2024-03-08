@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>留言板</title>
+<style>
+    #messages {
+        margin-bottom: 20px;
+    }
+</style>
+</head>
+<body>
+    <h1>留言板</h1>
+    <form id="messageForm">
+        <label for="name">姓名:</label><br>
+        <input type="text" id="name" name="name" required><br>
+        <label for="message">留言:</label><br>
+        <textarea id="message" name="message" rows="4" cols="50" required></textarea><br>
+        <button type="submit">提交</button>
+    </form>
+    <p>该网页已被访问 <span id="visitCount">0</span> 次。</p>
+
+    <div id="messages">
+        <!-- 这里用于显示留言 -->
+    </div>
+
+    <script>
+        
+        const messageForm = document.getElementById('messageForm');
+        const messagesDiv = document.getElementById('messages');
+
+        // 存储留言的数组
+        let messages = [];
+
+        // 加载现有留言
+        function loadMessages() {
+            messagesDiv.innerHTML = '';
+            messages.forEach(message => {
+                const messageElement = document.createElement('div');
+                messageElement.innerHTML = `<strong>${message.name}:</strong> ${message.message}`;
+                messagesDiv.appendChild(messageElement);
+            });
+        }
+
+        // 提交留言表单
+        messageForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = this.name.value;
+            const message = this.message.value;
+            messages.push({ name, message });
+            this.reset(); // 重置表单
+            loadMessages(); // 重新加载留言
+        });
+
+        // 初始加载留言
+        loadMessages();
+
+        let visitCount = localStorage.getItem('visitCount');
+
+        if (!visitCount) {
+            visitCount = 0;
+        }
+
+        document.getElementById('visitCount').textContent = visitCount;
+
+        visitCount++;
+        localStorage.setItem('visitCount', visitCount);
+    </script>
+</body>
+</html>
